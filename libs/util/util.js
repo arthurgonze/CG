@@ -320,6 +320,18 @@ export function createLightSphere(scene, radius, widthSegments, heightSegments, 
   return object;
 }
 
+export function createColoredLightSphere(scene, radius, widthSegments, heightSegments, position, color)
+{
+  var geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments, 0, Math.PI * 2, 0, Math.PI);
+  var material = new THREE.MeshBasicMaterial({color:color});
+  var object = new THREE.Mesh(geometry, material);
+    object.visible = true;
+    object.position.copy(position);
+  scene.add(object);
+
+  return object;
+}
+
 export function initDefaultDirectionalLighting(scene, initialPosition) {
     var position = (initialPosition !== undefined) ? initialPosition : new THREE.Vector3(100, 200, 200);
 
