@@ -9,8 +9,8 @@ import {initRenderer,
         SecondaryBox,
         createGroundPlane,
         onWindowResize, 
-        degreesToRadians, 
-        createColoredLightSphere} from "../libs/util/util.js";
+        degreesToRadians,
+        createLightSphere} from "../libs/util/util.js";
 
 var scene = new THREE.Scene();    // Create main scene
 var stats = new Stats();          // To show FPS information
@@ -152,6 +152,18 @@ function setBar(width, height, position, rotation)
   cylinder.rotation.set(rotation.x,rotation.y,rotation.z);
   // add the sphere to the scene
   scene.add( cylinder );
+}
+
+function createColoredLightSphere(scene, radius, widthSegments, heightSegments, position, color)
+{
+  var geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments, 0, Math.PI * 2, 0, Math.PI);
+  var material = new THREE.MeshBasicMaterial({color:color});
+  var object = new THREE.Mesh(geometry, material);
+    object.visible = true;
+    object.position.copy(position);
+  scene.add(object);
+
+  return object;
 }
 
 // Update light position of the current light
