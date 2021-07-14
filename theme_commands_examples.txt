@@ -4,8 +4,8 @@ You can use the [editor on GitHub](https://github.com/arthurgonze/CG/edit/RVA/RE
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Trabalho 2
-[Ambiente 1](https://github.com/arthurgonze/CG/T1/t1_ex01.html).
+### Markdown
+
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
