@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <link rel="shortcut icon" href="../favicon.ico">
+    <script src="../libs/aframe/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-animation-component@3.2.1/dist/aframe-animation-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-extras.animation-mixer@3.4.0/dist/aframe-extras.animation-mixer.js"></script>
+    <script src="t2_ex04.js"></script>
+  </head>
+
+  <body>
+    <a-scene ambiente-4>
+      <a-camera cursor-listener>
+        <a-entity id = "aim" cursor="fuse: false; fuseTimeout: 500"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                  material="color: black; shader: flat">
+        </a-entity>
+      </a-camera>
+
+
+      <a-assets>
+        <a-asset-item id="conselho" src="/assets/objects/star wars/jedi_council_baked/scene.gltf"></a-asset-item>
+      </a-assets>
+      
+      <a-gltf-model src="#conselho" id = "conselho" animation-mixer></a-gltf-model>
+
+      <a-assets>
+        <a-asset-item id="anakin" src="/assets/objects/star wars/anakin/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-gltf-model src="#anakin" id="anakin" animation-mixer="" gltf-model="/assets/objects/star wars/anakin/scene.gltf" scale="0.03 0.03 0.03" position="-0.18 -0.01 6" rotation="0 90 0"></a-gltf-model>
+
+      <a-assets>
+        <a-asset-item id="ahsoka" src="/assets/objects/star wars/ahsoka_tano_return_season_7_star_wars_clone_wars/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-gltf-model src="#ahsoka" id = "ahsoka" animation-mixer></a-gltf-model>
+
+      <a-assets>
+        <a-asset-item id="r2d2" src="/assets/objects/star wars/r2d2_-_star_wars/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-gltf-model src="#r2d2" id = "r2d2" animation-mixer="" gltf-model="/assets/objects/star wars/r2d2_-_star_wars/scene.gltf" position="2.3 -0.1 0" scale="0.003 0.003 0.003" visible=""></a-gltf-model>
+
+      <a-assets>
+        <a-asset-item id="c3po" src="/assets/objects/star wars/star_wars_-_c3po/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-gltf-model src="#c3po" id="c3po" animation-mixer="" gltf-model="/assets/objects/star wars/star_wars_-_c3po/scene.gltf" scale="0.012 0.012 0.012" position = "-2.34 0 4.36" rotation = "0 148.6 0"></a-gltf-model>
+
+      <a-assets>
+        <a-asset-item id="kenobi" src="/assets/objects/star wars/obi_wan_kenob/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-gltf-model src="#kenobi" id = "kenobi" animation-mixer></a-gltf-model>
+
+      <a-assets>
+        <a-asset-item id="xwing" src="/assets/objects/star wars/x-wing/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-gltf-model src="#xwing" id="xwing" animation-mixer="" gltf-model="/assets/objects/star wars/x-wing/scene.gltf" scale="0.1 0.1 0.1" position = "-54.0 3 -1.87" rotation = "-32.5 -37.3 -46.5"></a-gltf-model>
+
+      <a-assets>
+        <a-asset-item id="yoda" src="/assets/objects/star wars/yoda_rig/scene.gltf"></a-asset-item>
+      </a-assets>
+      <a-gltf-model src="#yoda" id="yoda" animation-mixer="" gltf-model="/assets/objects/star wars/yoda_rig/scene.gltf" scale="0.025 0.025 0.025" position="-0.2 0 -4"></a-gltf-model>
+      
+    </a-scene>
+  </body>
+</html>
