@@ -14,16 +14,27 @@ AFRAME.registerComponent('ambiente-3', {
     var tamanhoMarte = 6794.4;
     var tamanhoJupiter = 142984;
 
-    var posVenus = (distanciaVenus/distanciaTerra)*75;
-    var posTerra = (distanciaTerra/distanciaTerra)*75;
-    var posMarte = (distanciaMarte/distanciaTerra)*75;
-    var posJupiter = (distanciaJupiter/distanciaTerra)*75;
+    // var posVenus = (distanciaVenus/distanciaTerra)*75;
+    // var posTerra = (distanciaTerra/distanciaTerra)*75;
+    // var posMarte = (distanciaMarte/distanciaTerra)*75;
+    // var posJupiter = (distanciaJupiter/distanciaTerra)*75;
 
-    var escalaSol = (tamanhoSol/distanciaTerra)*750;
-    var escalaVenus = (tamanhoVenus/distanciaTerra)*750;
-    var escalaTerra = (tamanhoTerra/distanciaTerra)*750;
-    var escalaMarte = (tamanhoMarte/distanciaTerra)*750;
-    var escalaJupiter = (tamanhoJupiter/distanciaTerra)*750;
+    // var escalaSol = (tamanhoSol/distanciaTerra)*750;
+    // var escalaVenus = (tamanhoVenus/distanciaTerra)*750;
+    // var escalaTerra = (tamanhoTerra/distanciaTerra)*750;
+    // var escalaMarte = (tamanhoMarte/distanciaTerra)*750;
+    // var escalaJupiter = (tamanhoJupiter/distanciaTerra)*750;
+
+    var escalaSol = 64;
+    var escalaVenus = 4;
+    var escalaTerra = 5;
+    var escalaMarte = 2;
+    var escalaJupiter = 8;
+
+    var posVenus = escalaSol+escalaVenus+(16);
+    var posTerra = escalaSol+escalaTerra+(16*2);
+    var posMarte = escalaSol+escalaMarte+(16*4);
+    var posJupiter = escalaSol+escalaJupiter+(16*8);
 
     // 1dia == 24h == 8,64e+7ms(medida do atributo "dur" da animacao)
     // 8,64e+7*0,0001 == 8640 ms ==  8,64s == 0,0024h 
@@ -35,10 +46,10 @@ AFRAME.registerComponent('ambiente-3', {
 
     // 1 ano == 12 meses == 365,25 dias == 8766h == 31557600000ms
     // 31557600000 * 0,0001 == 3155760ms == 3155,76s == 0,88h == 0,04 dia == 1,2e-3 mes == e-4 ano
-    var earthOrbit = 3155760;//12 meses
-    var venusOrbit = 0.583333*earthRotation;//7 meses
-    var marsOrbit = 1.92*earthRotation;//23 meses
-    var jupiterOrbit = 11.83*earthRotation;//142 meses
+    var earthOrbit = 3155.760;//12 meses
+    var venusOrbit = 0.583333*earthOrbit;//7 meses
+    var marsOrbit = 1.92*earthOrbit;//23 meses
+    var jupiterOrbit = 11.83*earthOrbit;//142 meses
 
     var camera = document.querySelector('#camera');
     camera.setAttribute('position', {x: 0, y: escalaJupiter*2, z: posJupiter});

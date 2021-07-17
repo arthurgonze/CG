@@ -12,9 +12,7 @@
       src="../assets/textures/2k_stars_milky_way.jpg" 
       rotation="0 0 0"></a-sky>
       
-      <a-entity  
-      id = "camera-pivot" 
-      animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+      <a-entity  id = "camera-pivot" >
         <a-camera 
           cursor-listener id = "camera" >
         </a-camera>
@@ -36,11 +34,11 @@
       shadow="cast: true"
       segments-height = 32
       segments-width = 32
-      animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+      animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
       </a-sphere>
 
       
-      <a-entity id = "venus-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+      <a-entity id = "venus-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
         <a-sphere id = "venus" 
         src="../assets/textures/2k_venus_atmosphere.jpg" 
         position="0 0 10.8" 
@@ -49,12 +47,12 @@
         shadow="cast: true"
         segments-height = 32
         segments-width = 32
-        animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+        animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
       </a-sphere>
     </a-entity>
       
 
-      <a-entity id = "terra-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+      <a-entity id = "terra-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
         <a-sphere id = "terra" 
           src="../assets/textures/2k_earth_daymap.jpg" 
           position="0 0 15" 
@@ -63,12 +61,12 @@
           shadow="cast: true"
           segments-height = 32
           segments-width = 32
-          animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+          animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
         </a-sphere>
       </a-entity>
       
 
-      <a-entity id = "marte-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+      <a-entity id = "marte-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
         <a-sphere id = "marte" 
           src="../assets/textures/2k_mars.jpg" 
           position="0 0 23" 
@@ -77,12 +75,12 @@
           shadow="cast: true"
           segments-height = 32
           segments-width = 32
-          animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+          animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
         </a-sphere>
       </a-entity>
       
 
-      <a-entity id = "jupiter-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+      <a-entity id = "jupiter-pivot" animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
         <a-sphere id = "jupiter" 
           src="../assets/textures/2k_jupiter.jpg" 
           position="0 0 78" 
@@ -91,7 +89,7 @@
           shadow="cast: true"
           segments-height = 32
           segments-width = 32
-          animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true">
+          animation="property: rotation; dir: forward; dur: 10000; to: 0 360 0; loop: true; easing: linear;">
         </a-sphere>
       </a-entity>
       
