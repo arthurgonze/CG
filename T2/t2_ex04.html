@@ -13,42 +13,13 @@
   <body>
     <a-scene ambiente-4>
       <a-camera universal-controls></a-camera>
-      <!-- Default lighting injected by A-Frame. -->
-      <!-- <a-entity light="type: ambient; color: #BBB"></a-entity>
-      <a-light type="directional" position="0 0 0" rotation="-90 0 0" target="#directionaltarget">
-        <a-entity id="directionaltarget" position="0 0 -1"></a-entity>
-      </a-light> -->
 
-
-      <a-assets>
-        <a-asset-item id="conselho" src="/T2/starWars/jedi_council_baked/scene.gltf"></a-asset-item>
-      </a-assets>
-      <a-gltf-model src="#conselho" id = "conselho" animation-mixer="" gltf-model="/T2/starWars/jedi_council_baked/scene.gltf"></a-gltf-model>
-
-      <a-assets>
-        <a-asset-item id="anakin" src="/T2/starWars/anakin/scene.gltf"></a-asset-item>
-      </a-assets>
-      <a-gltf-model src="#anakin" id="anakin" animation-mixer="" gltf-model="/T2/starWars/anakin/scene.gltf" scale="0.03 0.03 0.03" position="-0.18 -0.01 6" rotation="0 90 0"></a-gltf-model>
-
-      <a-assets>
-        <a-asset-item id="r2d2" src="/T2/starWars/r2d2_-_star_wars/scene.gltf"></a-asset-item>
-      </a-assets>
-      <a-gltf-model src="#r2d2" id = "r2d2" animation-mixer="" gltf-model="/T2/starWars/r2d2_-_star_wars/scene.gltf" position="2.3 -0.1 0" scale="0.003 0.003 0.003" visible=""></a-gltf-model>
-
-      <a-assets>
-        <a-asset-item id="c3po" src="/T2/starWars/star_wars_-_c3po/scene.gltf"></a-asset-item>
-      </a-assets>
-      <a-gltf-model src="#c3po" id="c3po" animation-mixer="" gltf-model="/T2/starWars/star_wars_-_c3po/scene.gltf" scale="0.012 0.012 0.012" position = "-2.34 0 4.36" rotation = "0 148.6 0"></a-gltf-model>
-      
-      <a-assets>
-        <a-asset-item id="xwing" src="/T2/starWars/x-wing/scene.gltf"></a-asset-item>
-      </a-assets>
-      <a-gltf-model src="#xwing" id="xwing" animation-mixer="" gltf-model="/T2/starWars/x-wing/scene.gltf" scale="0.1 0.1 0.1" position = "-54.0 3 -1.87" rotation = "-32.5 -37.3 -46.5"></a-gltf-model>
-
-      <a-assets>
-        <a-asset-item id="yoda" src="/T2/starWars/yoda_rig/scene.gltf"></a-asset-item>
-      </a-assets>
-      <a-gltf-model src="#yoda" id="yoda" animation-mixer="" gltf-model="/T2/starWars/yoda_rig/scene.gltf" scale="0.025 0.025 0.025" position="-0.2 0 -4"></a-gltf-model>
+      <a-entity id="council" gltf-model="/T2/starWars/jedi_council_baked/scene.gltf" animation-mixer></a-entity>
+      <a-entity id="anakin" gltf-model="/T2/starWars/anakin/scene.gltf" animation-mixer scale="0.03 0.03 0.03" position="-0.18 -0.01 6" rotation="0 90 0"></a-entity>
+      <a-entity id = "r2d2" gltf-model="/T2/starWars/r2d2_-_star_wars/scene.gltf" animation-mixer scale="0.003 0.003 0.003" position="2.3 -0.1 0" ></a-entity>
+      <a-entity id="c3po" gltf-model="/T2/starWars/star_wars_-_c3po/scene.gltf" animation-mixer scale="0.012 0.012 0.012" position = "-2.34 0 4.36" rotation = "0 148.6 0"></a-entity>
+      <a-entity id="xwing" gltf-model="/T2/starWars/x-wing/scene.gltf" animation-mixer position = "-399.051 22.12 -59.01" rotation = "-32.5 -37.3 -46.5"></a-entity>
+      <a-entity src="#yoda" gltf-model="/T2/starWars/yoda_rig/scene.gltf" animation-mixer scale="0.025 0.025 0.025" position="-0.2 0 -4"></a-entity>
       
     </a-scene>
   </body>
