@@ -5,11 +5,20 @@
     <!-- <script src="https://unpkg.com/aframe-animation-component@3.2.1/dist/aframe-animation-component.min.js"></script> -->
     <script src="https://unpkg.com/aframe-extras.animation-mixer@3.4.0/dist/aframe-extras.animation-mixer.js"></script>
     <!-- <script src="t2_ex04.js"></script> -->
+    <!-- add this script in order to load a large set of 3D model extensions-->
+    <script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+
   </head>
 
   <body>
     <a-scene ambiente-4>
       <a-camera universal-controls></a-camera>
+      <!-- Default lighting injected by A-Frame. -->
+      <!-- <a-entity light="type: ambient; color: #BBB"></a-entity>
+      <a-light type="directional" position="0 0 0" rotation="-90 0 0" target="#directionaltarget">
+        <a-entity id="directionaltarget" position="0 0 -1"></a-entity>
+      </a-light> -->
+
 
       <a-assets>
         <a-asset-item id="conselho" src="/T2/starWars/jedi_council_baked/scene.gltf"></a-asset-item>
