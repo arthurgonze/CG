@@ -13,14 +13,12 @@
   <body>
     <a-scene ambiente-4>
       <a-camera universal-controls></a-camera>
-
       <a-entity id="council" gltf-model="/T2/starWars/jedi_council_baked/scene.gltf" animation-mixer></a-entity>
-      <a-entity id="anakin" gltf-model="/T2/starWars/anakin/scene.gltf" animation-mixer scale="0.03 0.03 0.03" position="-0.18 -0.01 6" rotation="0 90 0"></a-entity>
-      <a-entity id = "r2d2" gltf-model="/T2/starWars/r2d2_-_star_wars/scene.gltf" animation-mixer scale="0.003 0.003 0.003" position="2.3 -0.1 0" ></a-entity>
-      <a-entity id="c3po" gltf-model="/T2/starWars/star_wars_-_c3po/scene.gltf" animation-mixer scale="0.012 0.012 0.012" position = "-2.34 0 4.36" rotation = "0 148.6 0"></a-entity>
-      <a-entity id="xwing" gltf-model="/T2/starWars/x-wing/scene.gltf" animation-mixer position = "-399.051 22.12 -59.01" rotation = "-32.5 -37.3 -46.5"></a-entity>
-      <a-entity src="#yoda" gltf-model="/T2/starWars/yoda_rig/scene.gltf" animation-mixer scale="0.025 0.025 0.025" position="-0.2 0 -4"></a-entity>
-      
+      <a-entity id="anakin" gltf-model="/T2/starWars/anakin/scene.gltf" scale="0.03 0.03 0.03" position="-0.18 -0.01 6" rotation="0 90 0"></a-entity>
+      <a-entity id = "r2d2" gltf-model="/T2/starWars/r2d2_-_star_wars/scene.gltf" scale="0.003 0.003 0.003" position="2.3 -0.1 0" animation-mixer></a-entity>
+      <a-entity id="c3po" gltf-model="/T2/starWars/star_wars_-_c3po/scene.gltf" scale="0.012 0.012 0.012" position = "-2.34 0 4.36" rotation = "0 148.6 0"></a-entity>
+      <a-entity id="xwing" gltf-model="/T2/starWars/x-wing/scene.gltf" position = "-399.051 22.12 -59.01" rotation = "-32.5 -37.3 -46.5" animation-mixer></a-entity>
+      <a-entity src="#yoda" gltf-model="/T2/starWars/yoda_rig/scene.gltf" scale="0.025 0.025 0.025" position="-0.2 0 -4" animation-mixer></a-entity>
     </a-scene>
   </body>
 </html>
