@@ -8,12 +8,12 @@
     <body style='margin : 0px; overflow: hidden;'>
         <a-scene embedded arjs='sourceType: webcam;'>
             <a-assets>
-                <a-asset-item id="geralt"src="/T3/assets/Gltfs/geralt/scene.gltf"></a-asset-item>
+                <a-asset-item id="wk"src="/T3/assets/Gltfs/witch_king/scene.gltf"></a-asset-item>
             </a-assets>
             <a-marker preset='hiro' shadow="type: pcfsoft">
                 <a-plane rotation="-90 0 0" width="1.5" height="1.5" color="#7BC8A4" shadow="receive: true"></a-plane>
                 <!-- <a-box position='0 0.5 0' scale='0.5 0.5 0.5'  material='color: green' shadow="type: pcfsoft"></a-box> -->
-                <a-entity gltf-model="#geralt" position='0 0 0' shadow="type: pcfsoft"></a-entity>
+                <a-entity gltf-model="#wk" position='0 0.25 -0.25' scale='0.005 0.005 0.005' shadow="type: pcfsoft" animation-mixer></a-entity>
             </a-marker>
         
             <a-marker preset='kanji'>
