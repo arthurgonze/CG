@@ -4,19 +4,17 @@ import {ARjs}    from  '../libs/AR/ar.js';
 import { GLTFLoader } from '../build/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../build/jsm/loaders/DRACOLoader.js';
 import {InfoBox,
-		initDefaultSpotlight} from "../libs/util/util.js";
+		initDefaultSpotlight,
+		getMaxSize,} from "../libs/util/util.js";
+
 
 var renderer	= new THREE.WebGLRenderer({antialias: true, alpha: true});
-renderer.setSize( 720, 480 );
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setSize( 1920, 1080 );
 document.body.appendChild( renderer.domElement );
-
 // init scene and camera
 var scene	= new THREE.Scene();
 var camera = new THREE.Camera();
 scene.add(camera);
-
 
 // array of functions for the rendering loop
 var onRenderFcts= [];
@@ -27,16 +25,7 @@ showInformation();
 //----------------------------------------------------------------------------
 // Handle arToolkitSource
 var arToolkitSource = new ARjs.Source({	
-	// to read from the webcam
 	sourceType : 'webcam',
-
-	// to read from an image
-	//sourceType : 'image',
-	//sourceUrl : '../assets/AR/kanjiScene.jpg',
-
-	// to read from a video
-	// sourceType : 'video',
-	// sourceUrl : '../assets/AR/kanjiScene.mp4'
 })
 
 arToolkitSource.init(function onReady(){
@@ -80,28 +69,65 @@ onRenderFcts.push(function(){
 })
 
 //----------------------------------------------------------------------------
-// Adding object to the scene
-// Optional: Provide a DRACOLoader instance to decode compressed mesh data
-let patternArray = ["a", "b", "c", "d", "f", "g"];
-for (let i = 0; i < 6; i++)
-{
-	let markerRoot = new THREE.Group();
-	scene.add(markerRoot);
-	let markerControls = new ARjs.MarkerControls(arToolkitContext, markerRoot, {
-		type : 'pattern', patternUrl : "./assets/Marcadores/patt." + patternArray[i],
-	});
-	
-	loadGLTFObject('./assets/Gltfs/sauron/scene.gltf', markerRoot)
-	var floorGeometry = new THREE.PlaneGeometry( 20,20 );
-	var floorMaterial = new THREE.ShadowMaterial();
-	floorMaterial.opacity = 1;
-	var floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
-	floorMesh.rotation.x = -Math.PI/2;
-	floorMesh.receiveShadow = true;
-	scene.add( floorMesh );
-}
+// Create a ArMarkerControls
 
-function loadGLTFObject(path, markerRoot)
+// as we do changeMatrixMode: 'cameraTransformMatrix', start with invisible scene
+scene.visible = false
+
+////////////////////////////////////////////////////////////
+// setup markerRoots
+////////////////////////////////////////////////////////////
+var markerNames, markerArray, currentMarkerName;
+
+
+markerNames = ["a", "b", "c", "d", "f", "g"];
+markerArray = [];
+	
+for (let i = 0; i < markerNames.length; i++)
+{
+	let marker = new THREE.Group();
+	scene.add(marker);
+	markerArray.push(marker);
+
+	var markerControls = new ARjs.MarkerControls(arToolkitContext, camera, {	
+		type : 'pattern',
+		patternUrl : './assets/Marcadores/patt.' + markerNames[i],
+		changeMatrixMode: 'cameraTransformMatrix' // as we controls the camera, set changeMatrixMode: 'cameraTransformMatrix'
+	})
+	
+	let markerGroup = new THREE.Group();
+	marker.add(markerGroup);
+}
+//----------------------------------------------------------------------------
+var playAction = true;
+var mixer = new Array();
+////////////////////////////////////////////////////////////
+// setup scene
+////////////////////////////////////////////////////////////
+// var objectArray = new Array();
+var objeto1 = new THREE.Group();
+var objeto2 = new THREE.Group();
+var objeto3 = new THREE.Group();
+var objeto4 = new THREE.Group();
+var objeto5 = new THREE.Group();
+var objeto6 = new THREE.Group();
+loadGLTFObject('./assets/Gltfs/sauron/scene.gltf', true, 1, objeto1);
+loadGLTFObject('./assets/Gltfs/r2d2_-_star_wars/scene.gltf', true, 1, objeto2);
+loadGLTFObject('./assets/Gltfs/witch_king/scene.gltf', true, 1, objeto3);
+loadGLTFObject('./assets/Gltfs/x-wing/scene.gltf', true, 1, objeto4);
+loadGLTFObject('./assets/Gltfs/yoda_rig/scene.gltf', true, 1, objeto5);
+loadGLTFObject('./assets/Gltfs/la_renommee_louvre/scene.gltf', true, 1, objeto6);
+
+var activeObject = 0;
+// sceneGroup.add(objectArray[0]); 
+// markerArray[0].children[0].add( sceneGroup );
+// currentMarkerName = markerNames[0];
+
+let pointLight = new THREE.PointLight( 0xffffff, 1, 50 );
+camera.add( pointLight );
+
+
+function loadGLTFObject(path, visibility, desiredScale, group)
 {
 	const loader = new GLTFLoader();
 	const dracoLoader = new DRACOLoader();
@@ -110,63 +136,199 @@ function loadGLTFObject(path, markerRoot)
 	// Load a glTF resource
 	loader.load(path, 
 		function ( gltf ) {
-			markerRoot.add(gltf.scene);
+			var obj = gltf.scene;
 			gltf.animations; // Array<THREE.AnimationClip>
-			gltf.scene; // THREE.Group
+			var obj = gltf.scene; // THREE.Group
 			gltf.scenes; // Array<THREE.Group>
 			gltf.cameras; // Array<THREE.Camera>
 			gltf.asset; // Object
-			gltf.scene.scale.set(0.005,0.005,0.005,);},
+			obj.traverse( function ( child ) {
+			if ( child ) {
+				child.castShadow = true;
+			}
+			});
+			obj.traverse( function( node )
+			{
+			if( node.material ) node.material.side = THREE.DoubleSide;
+			});
+
+			obj = normalizeAndRescale(obj, desiredScale);
+			group.add( obj );
+			markerArray[0].children[0].add( group );
+			group.visible = false;
+			scene.add(group);
+		},
 		function ( xhr ) {console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );},
 		function ( error ) {console.log( 'An error happened' );}
 	);
 }
 
-function setPointLight(markerRoot, position, pointLight)
+// Normalize scale and multiple by the newScale
+function normalizeAndRescale(obj, newScale)
 {
-	pointLight.position.copy(position);
-	pointLight.shadow.mapSize.width = 512;
-  	pointLight.shadow.mapSize.height = 512;
-//   spotLight.angle = degreesToRadians(40);    
-	pointLight.castShadow = true;
-	pointLight.decay = 2;
-	pointLight.penumbra = 0.5;
-	pointLight.name = "Spot Light"
-
-  	markerRoot.add(pointLight);
+  var scale = getMaxSize(obj); // Available in 'utils.js'
+  obj.scale.set(newScale * (1.0/scale),
+                newScale * (1.0/scale),
+                newScale * (1.0/scale));
+  return obj;
 }
 
-function degreesToRadians(degrees)
+var controls = new function ()
 {
-  var pi = Math.PI;
-  return degrees * (pi/180);
-}
+	this.active = 0;
+	this.onChooseObject = function()
+    {
+		activeObject = this.active;
+    };
+};
 
-function createColoredLightSphere(marker, radius, widthSegments, heightSegments, position, color)
-{
-  var geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments, 0, Math.PI * 2, 0, Math.PI);
-  var material = new THREE.MeshBasicMaterial({color:color});
-  var object = new THREE.Mesh(geometry, material);
-    object.visible = true;
-    object.position.copy(position);
-    marker.add(object);
-}
-
-var controls = new function (){};
+// GUI interface
 var gui = new GUI();
+gui.add(controls, 'active',
+  	[0, 1, 2, 3, 4, 5])
+    .name("Change Object")
+    .onChange(function(e) { controls.onChooseObject(); });
 
+//----------------------------------------------------------------------------
+// Render the whole thing on the page
+// render the scene
 onRenderFcts.push(function(){
 	renderer.render( scene, camera );
 })
+
+function createTorus()
+{
+	var light = initDefaultSpotlight(scene, new THREE.Vector3(25, 30, 20)); // Use default light
+	var geometry = new THREE.TorusGeometry(0.6, 0.2, 20, 20, Math.PI * 2);
+	var objectMaterial = new THREE.MeshPhongMaterial({
+		color:"rgb(255,0,0)",     // Main color of the object
+		shininess:"200",            // Shininess of the object
+		specular:"rgb(255,255,255)" // Color of the specular component
+	});
+	var object = new THREE.Mesh(geometry, objectMaterial);
+		object.position.set(0.0, 0.2, 0.0);
+		object.rotation.x = Math.PI/2;
+
+	torus.add(object);
+	torus.visible = false;
+}
+
+function createCubeKnot()
+{
+	var geometry	= new THREE.BoxGeometry(1,1,1);
+	var material	= new THREE.MeshNormalMaterial({
+		transparent : true,
+		opacity: 0.5,
+		side: THREE.DoubleSide
+	});
+	var mesh	= new THREE.Mesh( geometry, material );
+	mesh.position.y	= geometry.parameters.height/2
+	cubeKnot.add( mesh );
+
+	var geometry	= new THREE.TorusKnotGeometry(0.3,0.1,64,16);
+	var material	= new THREE.MeshNormalMaterial();
+	var mesh	= new THREE.Mesh( geometry, material );
+	mesh.position.y	= 0.5
+	cubeKnot.add( mesh );
+
+	onRenderFcts.push(function(delta){
+		mesh.rotation.x += Math.PI*delta
+	})
+}
 
 function showInformation()
 {
 	// Use this to show information onscreen
 	controls = new InfoBox();
-		controls.add("Put the 'KANJI' & 'Hiro' markers in front of the camera.");
+		controls.add("T3 - Ex04");
+		controls.addParagraph();
+		controls.add("Put the 'MULTI' marker in front of the camera.");
 		controls.show();
 }
 
+function update()
+{
+	objeto1.visible = false;
+	objeto2.visible = false;
+	objeto3.visible = false;
+	objeto4.visible = false;
+	objeto5.visible = false;
+	objeto5.visible = false;
+
+	let lerpAmount = 0.5;
+	
+	for(var i=0; i<6; i++)
+	{
+		var someVisible = false;
+		if(markerArray[i].visible){
+			if(i == 0  && activeObject == 0)
+			{
+				objeto1.visible = true;
+				let p = markerArray[i].children[0].getWorldPosition();
+				let q = markerArray[i].children[0].getWorldQuaternion();
+				let s = markerArray[i].children[0].getWorldScale();
+				
+				objeto1.position.lerp(p, lerpAmount);
+				objeto1.quaternion.slerp(q, lerpAmount);
+				objeto1.scale.lerp(s, lerpAmount);
+			}
+			if(i == 1 && activeObject == 1)
+			{
+				objeto2.visible = true;
+				let p = markerArray[i].children[0].getWorldPosition();
+				let q = markerArray[i].children[0].getWorldQuaternion();
+				let s = markerArray[i].children[0].getWorldScale();
+				
+				objeto2.position.lerp(p, lerpAmount);
+				objeto2.quaternion.slerp(q, lerpAmount);
+				objeto2.scale.lerp(s, lerpAmount);
+			}
+			if(i == 2 && activeObject == 2)
+			{
+				objeto3.visible = true;
+				let p = markerArray[i].children[0].getWorldPosition();
+				let q = markerArray[i].children[0].getWorldQuaternion();
+				let s = markerArray[i].children[0].getWorldScale();
+				
+				objeto3.position.lerp(p, lerpAmount);
+				objeto3.quaternion.slerp(q, lerpAmount);
+				objeto3.scale.lerp(s, lerpAmount);
+			}
+			if(i == 3 && activeObject == 3)
+			{
+				objeto4.visible = true;
+				let p = markerArray[i].children[0].getWorldPosition();
+				let q = markerArray[i].children[0].getWorldQuaternion();
+				let s = markerArray[i].children[0].getWorldScale();
+				
+				objeto4.position.lerp(p, lerpAmount);
+				objeto4.quaternion.slerp(q, lerpAmount);
+				objeto4.scale.lerp(s, lerpAmount);
+			}
+			if(i == 4 && activeObject == 4)
+			{
+				objeto5.visible = true;
+				let p = markerArray[i].children[0].getWorldPosition();
+				let q = markerArray[i].children[0].getWorldQuaternion();
+				let s = markerArray[i].children[0].getWorldScale();
+				
+				objeto5.position.lerp(p, lerpAmount);
+				objeto5.quaternion.slerp(q, lerpAmount);
+				objeto5			}
+			if(i == 5 && activeObject == 5)
+			{
+				objeto6.visible = true;
+				let p = markerArray[i].children[0].getWorldPosition();
+				let q = markerArray[i].children[0].getWorldQuaternion();
+				let s = markerArray[i].children[0].getWorldScale();
+				
+				objeto6.position.lerp(p, lerpAmount);
+				objeto6.quaternion.slerp(q, lerpAmount);
+				objeto6.scale.lerp(s, lerpAmount);
+			}
+		 }
+	}
+}
 // run the rendering loop
 requestAnimationFrame(function animate(nowMsec)
 {
@@ -178,6 +340,7 @@ requestAnimationFrame(function animate(nowMsec)
 	var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
 	lastTimeMsec	= nowMsec
 	// call each update function
+	update();
 	onRenderFcts.forEach(function(onRenderFct){
 		onRenderFct(deltaMsec/1000, nowMsec/1000)
 	})
