@@ -88,7 +88,7 @@ for (let i = 0; i < 2; i++)
 	let markerRoot = new THREE.Group();
 	scene.add(markerRoot);
 	let markerControls = new ARjs.MarkerControls(arToolkitContext, markerRoot, {
-		type : 'pattern', patternUrl : "../libs/AR/data/patt." + patternArray[i],
+		type : 'pattern', patternUrl : "./assets/Marcadores/patt." + patternArray[i],
 	});
 
 	if(i == 0)
