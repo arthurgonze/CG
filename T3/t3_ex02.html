@@ -9,27 +9,27 @@
   <body style='margin : 0px; overflow: hidden;'>
     <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;' vr-mode-ui="enabled: false;" detect-markers-handler id="scene">
         <a-marker id = "HIRO" preset='hiro' emitevents="true"></a-marker>
-        <a-marker id = "KANJI" preset='kanji'></a-marker>
+        <a-marker id = "KANJI" preset='kanji' emitevents="true"></a-marker>
 
         <!-- <a-marker preset="area">
             <a-box color="tomato" position="0 0 0" rotation="0 -90 -70"depth="2" height="2" width="2" ></a-box>
         </a-marker> -->
-        <a-marker id = "A" type='pattern' url='./assets/Marcadores/patt.a'>
+        <a-marker id = "A" type='pattern' url='./assets/Marcadores/patt.a' emitevents="true">
             <!-- <a-box position='0 0.5 0' material='color: red;'></a-box> -->
         </a-marker>
-        <a-marker id = "B" type='pattern' url='./assets/Marcadores/patt.b'>
+        <a-marker id = "B" type='pattern' url='./assets/Marcadores/patt.b' emitevents="true">
             <!-- <a-box position='0 0.5 0' material='color: green;'></a-box> -->
         </a-marker>
-        <a-marker id = "C" type='pattern' url='./assets/Marcadores/patt.c'>
+        <a-marker id = "C" type='pattern' url='./assets/Marcadores/patt.c' emitevents="true">
             <!-- <a-box position='0 0.5 0' material='color: blue;'></a-box> -->
         </a-marker>
-        <a-marker id = "D"type='pattern' url='./assets/Marcadores/patt.d'>
+        <a-marker id = "D"type='pattern' url='./assets/Marcadores/patt.d' emitevents="true">
             <!-- <a-box position='0 0.5 0' material='color: black;'></a-box> -->
         </a-marker>
-        <a-marker id = "G"type='pattern' url='./assets/Marcadores/patt.g'>
+        <a-marker id = "G"type='pattern' url='./assets/Marcadores/patt.g' emitevents="true">
             <!-- <a-box position='0 0.5 0' material='color: white;'></a-box> -->
         </a-marker>
-        <a-marker id = "F" type='pattern' url='./assets/Marcadores/patt.f'>
+        <a-marker id = "F" type='pattern' url='./assets/Marcadores/patt.f' emitevents="true">
             <!-- <a-box position='0 0.5 0' material='color: purple;'></a-box> -->
         </a-marker>
 

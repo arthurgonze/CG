@@ -56,6 +56,12 @@ AFRAME.registerComponent('detect-markers-handler', {
       tronco_05.setAttribute('shadow', "cast", "true");
       tronco_05.setAttribute('material', 'color', "magenta");
     
+    tronco_00.setAttribute('visible',false);
+    tronco_01.setAttribute('visible',false);
+    tronco_02.setAttribute('visible',false);
+    tronco_03.setAttribute('visible',false);
+    tronco_04.setAttribute('visible',false);
+    tronco_05.setAttribute('visible',false);
     a.appendChild(tronco_00);
     b.appendChild(tronco_01);
     c.appendChild(tronco_02);
@@ -64,14 +70,19 @@ AFRAME.registerComponent('detect-markers-handler', {
     g.appendChild(tronco_05);
 
     var caixa = document.createElement('a-box');
-    caixa.setAttribute('position', {x: 0, y: 0, z: 0});
-    caixa.setAttribute('scale', {x: 3, y: 6, z: 6});
+    var gZ =  g.object3D.position.z;
+    var bZ =  b.object3D.position.z;
+    var bX =  b.object3D.position.x;
+    var newZ = (bZ+gZ)/2;
+    caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
+    caixa.setAttribute('scale', {x: 1, y: 0.5, z: 1});
     caixa.setAttribute('geometry', {primitive: 'box'});
-    caixa.setAttribute('material', 'transparent', true);
+    caixa.setAttribute('material', 'transparent', false);
     caixa.setAttribute('material', 'opacity', 0.5);
     caixa.setAttribute('shadow', "cast", "true");
     caixa.setAttribute('material', 'color', "black");
     sceneEl.appendChild(caixa);
+    
     caixa.setAttribute('visible',false);
 
     sceneEl.addEventListener("markerFound", (e) => {
@@ -89,35 +100,48 @@ AFRAME.registerComponent('detect-markers-handler', {
         tronco_05.setAttribute('visible', true);
       }else if(kanji.getAttribute('visible'))
       {
+          var gZ =  g.object3D.position.z;
+          var bZ =  b.object3D.position.z;
+          var bX =  b.object3D.position.x;
+          var newZ = (bZ+gZ)/2;
           if(a.getAttribute('visible'))
           {
             caixa.setAttribute('visible', true);
-            caixa.setAttribute('position', {x: a.object3D.position.x, y: a.object3D.position.y, z: a.object3D.position.z});
+            caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
+            // caixa.setAttribute('position', {x: a.object3D.position.x, y: a.object3D.position.y, z: a.object3D.position.z});
           }
           else if(b.getAttribute('visible'))
           {
             caixa.setAttribute('visible', true);
-            caixa.setAttribute('position', {x: b.object3D.position.x, y: b.object3D.position.y, z: b.object3D.position.z});
+            caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
+            // caixa.setAttribute('position', {x: b.object3D.position.x, y: b.object3D.position.y, z: b.object3D.position.z});
           }
           else if(c.getAttribute('visible'))
           {
             caixa.setAttribute('visible', true);
-            caixa.setAttribute('position', {x: c.object3D.position.x, y: c.object3D.position.y, z: c.object3D.position.z});
+            caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
+            // caixa.setAttribute('position', {x: c.object3D.position.x, y: c.object3D.position.y, z: c.object3D.position.z});
           }
           else if(d.getAttribute('visible'))
           {
             caixa.setAttribute('visible', true);
-            caixa.setAttribute('position', {x: d.object3D.position.x, y: d.object3D.position.y, z: d.object3D.position.z});
+            caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
+            // caixa.setAttribute('position', {x: d.object3D.position.x, y: d.object3D.position.y, z: d.object3D.position.z});
           }
           else if(f.getAttribute('visible'))
           {
             caixa.setAttribute('visible', true);
-            caixa.setAttribute('position', {x: f.object3D.position.x, y: f.object3D.position.y, z: f.object3D.position.z});
+            caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
+            // caixa.setAttribute('position', {x: f.object3D.position.x, y: f.object3D.position.y, z: f.object3D.position.z});
           }
           else if(g.getAttribute('visible'))
           {
             caixa.setAttribute('visible', true);
-            caixa.setAttribute('position', {x: g.object3D.position.x, g: a.object3D.position.y, g: a.object3D.position.z});
+            caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
+            // caixa.setAttribute('position', {x: g.object3D.position.x, g: a.object3D.position.y, g: a.object3D.position.z});
+          }else
+          {
+            caixa.setAttribute('visible', false);
           }
       }
       else{
@@ -144,6 +168,16 @@ AFRAME.registerComponent('detect-markers-handler', {
         tronco_05.setAttribute('visible', false);
       }
       if(!kanji.getAttribute('visible'))
+      {
+        caixa.setAttribute('visible', false);
+      }
+      if(kanji.getAttribute('visible') && 
+      !a.getAttribute('visible')  && 
+      !b.getAttribute('visible') && 
+      !c.getAttribute('visible') && 
+      !d.getAttribute('visible') && 
+      !f.getAttribute('visible') && 
+      !g.getAttribute('visible'))
       {
         caixa.setAttribute('visible', false);
       }
