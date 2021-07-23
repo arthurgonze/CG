@@ -75,10 +75,11 @@ AFRAME.registerComponent('detect-markers-handler', {
     var bX =  b.object3D.position.x;
     var newZ = (bZ+gZ)/2;
     caixa.setAttribute('position', {x: bX, y: 0, z: newZ});
-    caixa.setAttribute('scale', {x: 1, y: 0.5, z: 1});
+    caixa.setAttribute('scale', {x: 2, y: 3, z: 0.5});
+    caixa.setAttribute('rotation', {x: 70, y: 180, z: 145});
     caixa.setAttribute('geometry', {primitive: 'box'});
-    caixa.setAttribute('material', 'transparent', false);
-    caixa.setAttribute('material', 'opacity', 0.5);
+    caixa.setAttribute('material', 'transparent', true);
+    caixa.setAttribute('material', 'opacity', 0.75);
     caixa.setAttribute('shadow', "cast", "true");
     caixa.setAttribute('material', 'color', "black");
     sceneEl.appendChild(caixa);
