@@ -54,7 +54,7 @@ function createSky()
 function createExternalObject()
 {
     // Load GLTF windmill
-    var modelPath = './assets/gltfs/x-wing/';
+    var modelPath = './assets/models/gltfs/x-wing/';
     var modelName = 'scene.gltf';
     var loader = new GLTFLoader( );
     loader.load( modelPath + modelName, function ( gltf ) {
