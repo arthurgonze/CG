@@ -207,7 +207,7 @@ function createMuseumAmbient1()
 
 function createMuseumAmbient2()
 {
-    createSceneLight();
+    // createSceneLight();
     // ambiente 1
     var modelPath = "./assets/models/gltfs/"
     var modelName = "chapelle_-_musee_de_cluny/scene.gltf";
