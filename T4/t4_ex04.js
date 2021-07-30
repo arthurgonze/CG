@@ -2,6 +2,9 @@
 import * as THREE from '../build/three.module.js';
 import { VRButton } from '../build/jsm/webxr/VRButton.js';
 import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js'
+import {OBJLoader} from '../build/jsm/loaders/OBJLoader.js'
+import {DRACOLoader} from '../build/jsm/loaders/DRACOLoader.js'
+import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js'
 import {onWindowResize,
 		degreesToRadians,
 		createGroundPlane,
@@ -60,6 +63,7 @@ function init()
 
     //-- 'Camera Holder' to help moving the camera
     cameraHolder.position.set(0.0, 1.6, 10.0);
+    // cameraHolder.position.set(20, 1.60, 10);
     cameraHolder.add (camera);
     scene.add( cameraHolder );
 
@@ -234,14 +238,16 @@ function createMuseumAmbient2()
 {
     // createSceneLight();
     // ambiente 1
-    var modelPath = "./assets/models/gltfs/"
-    var modelName = "chapelle_-_musee_de_cluny/scene.gltf";
+    var modelPath = "./assets/models/objs/";
+    var mtlName = "chapelle/chapelle-cluny-def-5x8k.mtl";
+    var modelName = "chapelle/chapelle-cluny-def-5x8k.obj";
     var initialScale = 10;
-    var initialPosition = new THREE.Vector3(16, 6, 11);
-    var initialRotation = new THREE.Vector3(0, 90, 0);
-    importGLTF(modelPath, modelName, initialPosition, initialRotation, initialScale);
+    var initialPosition = new THREE.Vector3(20.7, 2.5, 11);
+    var initialRotation = new THREE.Vector3(-90, 0, 90); 
+    importOBJ(modelPath, modelName, mtlName, initialPosition, initialRotation, initialScale);
 
     // Create Ground Plane
+    modelPath = "./assets/models/gltfs/"
     var planeGeometry = new THREE.PlaneGeometry(10, 10, 100, 100);
     var planeMaterial = new THREE.MeshLambertMaterial({color:"rgb(0,0,0)", side:THREE.DoubleSide, transparent:true, opacity: 0});
     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -316,6 +322,10 @@ function createMuseumAmbient2()
 function importGLTF(modelPath, modelName, initialPosition, initialRotation, initialScale)
 {
     var loader = new GLTFLoader( );
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
+
     loader.load( modelPath + modelName, function ( gltf ) {
         var obj = gltf.scene;
 
@@ -335,8 +345,71 @@ function importGLTF(modelPath, modelName, initialPosition, initialRotation, init
         obj.rotateZ(degreesToRadians(initialRotation.z));
         scene.add(obj);
         return obj;
-    }, null, null);
+    }, function ( xhr ) {
+
+		console.log( "GLTF "+( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+	}, function ( error ) {
+
+		console.log( 'An error happened' );
+
+	});
 }
+
+function importOBJ(modelPath, modelName, mtlName, initialPosition, initialRotation, initialScale)
+{
+    var mtlLoader = new MTLLoader( );
+
+    mtlLoader.load( modelPath + mtlName, function ( materials ) {
+            materials.preload();
+
+            var objLoader = new OBJLoader();
+            objLoader.setMaterials( materials )
+            objLoader.load( modelPath + modelName, function ( obj ) {
+                    obj = normalizeAndRescale(obj, initialScale);
+                    obj.translateX(initialPosition.x);
+                    obj.translateY(initialPosition.y);
+                    obj.translateZ(initialPosition.z);
+                    obj.rotateX(degreesToRadians(initialRotation.x));
+                    obj.rotateY(degreesToRadians(initialRotation.y));
+                    obj.rotateZ(degreesToRadians(initialRotation.z));
+                    scene.add( obj );
+                }, function ( xhr ) {
+
+                    console.log( "Obj "+( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+            
+                }, function ( error ) {
+            
+                    console.log( 'An error happened' );
+            
+                });
+
+        });
+}
+// function importOBJ(modelPath, modelName, initialPosition, initialRotation, initialScale)
+// {
+//     var loader = new OBJLoader( );
+//     loader.load( modelPath + modelName, function ( obj ) {
+//         // var obj = obj.scene;
+
+//         obj.traverse( function ( child ) {
+//             if ( child ) { 
+//                 child.castShadow = true; 
+//                 child.receiveShadow = true;
+//             }
+//         });
+
+//         obj = normalizeAndRescale(obj, initialScale);
+//         obj.translateX(initialPosition.x);
+//         obj.translateY(initialPosition.y);
+//         obj.translateZ(initialPosition.z);
+//         obj.rotateX(degreesToRadians(initialRotation.x));
+//         obj.rotateY(degreesToRadians(initialRotation.y));
+//         obj.rotateZ(degreesToRadians(initialRotation.z));
+//         scene.add(obj);
+//         return obj;
+//     }, null, null);
+// }
 // Normalize scale and multiple by the newScale
 function normalizeAndRescale(obj, newScale)
 {

@@ -6,6 +6,9 @@ import {onWindowResize,
 		createGroundPlane,
         getMaxSize} from "../libs/util/util.js";
 import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js'
+import {OBJLoader} from '../build/jsm/loaders/OBJLoader.js'
+import {DRACOLoader} from '../build/jsm/loaders/DRACOLoader.js'
+import {MTLLoader} from '../build/jsm/loaders/MTLLoader.js'
 
 //-----------------------------------------------------------------------------------------------
 //-- MAIN SCRIPT --------------------------------------------------------------------------------
@@ -29,6 +32,7 @@ let moveCamera; // Move when a button is pressed
 //-- 'Camera Holder' to help moving the camera
 const cameraHolder = new THREE.Object3D();
 cameraHolder.position.set(0.0, 1.6, 10.0);
+// cameraHolder.position.set(20, 1.60, 10);
 cameraHolder.add(camera);
 scene.add( cameraHolder );
 //-- Create VR button and settings ---------------------------------------------------------------
@@ -65,35 +69,44 @@ function move()
 		cameraHolder.translateZ(moveTo.z);	
 
         
-        // console.log(cameraHolder.position);
-        // check ambiente 1 - exit 1 & 2
-        if(cameraHolder.position.z > 3.6 && ((cameraHolder.position.x<-3.5)||(cameraHolder.position.x>3.5)))
+        if( cameraHolder.position.x < 15)
         {
-            teleportToScene2();
-        }
+            // check ambiente 1 - exit 1 & 2
+            if(cameraHolder.position.z > 3.6 && ((cameraHolder.position.x<-3.5)||(cameraHolder.position.x>3.5)) )
+            {
+                console.log("Teleport sala 2");
+                teleportToScene2();
+            }
 
-        // check ambiente 1 - exit 1 & 2
-        if(cameraHolder.position.z > 12.4 && ((cameraHolder.position.x<-3.5)||(cameraHolder.position.x>3.5)))
+            // check ambiente 1 - exit 1 & 2
+            if(cameraHolder.position.z > 12.4 && ((cameraHolder.position.x<-3.5)||(cameraHolder.position.x>3.5)))
+            {
+                console.log("Teleport sala 2");
+                teleportToScene2();
+            }
+        }else
         {
-            teleportToScene2();
+            // check ambiente 2
+            if(cameraHolder.position.z > 7.4 && cameraHolder.position.x > 23)
+            {
+                console.log("Teleport sala 1");
+                teleportToScene1();
+            }
         }
-
         
-        // check ambiente 2
-        if(cameraHolder.position.z > 7.7 && cameraHolder.position.x<23.76)
-        {
-            teleportToScene1();
-        }
+        
 	}
 }
 
 function teleportToScene2()
 {
+    moveCamera = false;
     cameraHolder.position.set(20, 1.60, 10);
 }
 
 function teleportToScene1()
 {
+    moveCamera = false;
     cameraHolder.position.set(0.0, 1.6, 10.0);
 }
 
@@ -105,6 +118,7 @@ function onSelectStart( )
 function onSelectEnd( ) 
 {
 	moveCamera = false;
+    console.log(cameraHolder.position);
 }
 
 //-- Main loop -----------------------------------------------------------------------------------
@@ -145,6 +159,7 @@ function createSceneLight()
 
 function createMuseumAmbient1()
 {
+    createSceneLight();
     // ambiente 1
     var modelPath = "./assets/models/gltfs/"
     var modelName = "instamuseum_for_geologypage/scene.gltf";
@@ -163,7 +178,7 @@ function createMuseumAmbient1()
     plane.rotateX(degreesToRadians(-90));
     plane.name = "ground";
     scene.add(plane);
-    createSceneLight();
+    
 
     // ambiente 1 exit
     const geometry = new THREE.BoxGeometry( 1, 2, 1 );
@@ -209,14 +224,16 @@ function createMuseumAmbient2()
 {
     // createSceneLight();
     // ambiente 1
-    var modelPath = "./assets/models/gltfs/"
-    var modelName = "chapelle_-_musee_de_cluny/scene.gltf";
+    var modelPath = "./assets/models/objs/";
+    var mtlName = "chapelle/chapelle-cluny-def-5x8k.mtl";
+    var modelName = "chapelle/chapelle-cluny-def-5x8k.obj";
     var initialScale = 10;
-    var initialPosition = new THREE.Vector3(16, 6, 11);
-    var initialRotation = new THREE.Vector3(0, 90, 0);
-    importGLTF(modelPath, modelName, initialPosition, initialRotation, initialScale);
+    var initialPosition = new THREE.Vector3(20.7, 2.5, 11);
+    var initialRotation = new THREE.Vector3(-90, 0, 90); 
+    importOBJ(modelPath, modelName, mtlName, initialPosition, initialRotation, initialScale);
 
     // Create Ground Plane
+    modelPath = "./assets/models/gltfs/"
     var planeGeometry = new THREE.PlaneGeometry(10, 10, 100, 100);
     var planeMaterial = new THREE.MeshLambertMaterial({color:"rgb(0,0,0)", side:THREE.DoubleSide, transparent:true, opacity: 0});
     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -292,6 +309,10 @@ function createMuseumAmbient2()
 function importGLTF(modelPath, modelName, initialPosition, initialRotation, initialScale)
 {
     var loader = new GLTFLoader( );
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
+
     loader.load( modelPath + modelName, function ( gltf ) {
         var obj = gltf.scene;
 
@@ -311,7 +332,46 @@ function importGLTF(modelPath, modelName, initialPosition, initialRotation, init
         obj.rotateZ(degreesToRadians(initialRotation.z));
         scene.add(obj);
         return obj;
-    }, null, null);
+    }, function ( xhr ) {
+
+		console.log( "GLTF "+( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+	}, function ( error ) {
+
+		console.log( 'An error happened' );
+
+	});
+}
+
+function importOBJ(modelPath, modelName, mtlName, initialPosition, initialRotation, initialScale)
+{
+    var mtlLoader = new MTLLoader( );
+
+    mtlLoader.load( modelPath + mtlName, function ( materials ) {
+            materials.preload();
+
+            var objLoader = new OBJLoader();
+            objLoader.setMaterials( materials )
+            objLoader.load( modelPath + modelName, function ( obj ) {
+                    obj = normalizeAndRescale(obj, initialScale);
+                    obj.translateX(initialPosition.x);
+                    obj.translateY(initialPosition.y);
+                    obj.translateZ(initialPosition.z);
+                    obj.rotateX(degreesToRadians(initialRotation.x));
+                    obj.rotateY(degreesToRadians(initialRotation.y));
+                    obj.rotateZ(degreesToRadians(initialRotation.z));
+                    scene.add( obj );
+                }, function ( xhr ) {
+
+                    console.log( "Obj "+( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+            
+                }, function ( error ) {
+            
+                    console.log( 'An error happened' );
+            
+                });
+
+        });
 }
 // Normalize scale and multiple by the newScale
 function normalizeAndRescale(obj, newScale)
