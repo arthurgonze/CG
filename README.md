@@ -43,3 +43,8 @@
 [Ambiente 04](https://arthurgonze.github.io/CG/T4/t4_ex04.html).
 
 [Ambiente 05](https://arthurgonze.github.io/CG/T4/t4_ex05.html).
+
+## Shader Island
+[Oceano](https://arthurgonze.github.io/CG/T6/water.html)
+
+[Ilha](https://karlaflorentino.github.io/RVA-2021/ProjetoIntegrado/scene.html)
