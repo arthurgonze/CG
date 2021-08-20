@@ -202,7 +202,7 @@ function initDefaultOcean()
 function initCustomOcean()
 {
      // Water
-    let waterGeometry = new PlaneBufferGeometry(25000, 25000, 2500, 2500);
+    let waterGeometry = new PlaneBufferGeometry(10000, 10000, 500, 500);
 
     water = new CustomWater(
          waterGeometry,
