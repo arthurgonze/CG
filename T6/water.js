@@ -1,5 +1,7 @@
 //-- Imports -------------------------------------------------------------------------------------
 import * as THREE from '../build/three.module.js';
+import {PlaneBufferGeometry,
+    RepeatWrapping} from '../build/three.module.js';
 import { VRButton } from '../build/jsm/webxr/VRButton.js';
 import {onWindowResize,
 		degreesToRadians,
@@ -8,7 +10,8 @@ import {onWindowResize,
 import Stats from '../build/jsm/libs/stats.module.js';
 import { GUI } from '../build/jsm/libs/dat.gui.module.js';
 import { Sky } from '../build/jsm/objects/Sky.js';
-import { Water } from './water/default_water.js';
+import { Water as DefaultWater} from './water/default_water.js';
+import { Waves as CustomWater } from './water/custom_water.js';
 
 
 //-----------------------------------------------------------------------------------------------
@@ -33,7 +36,7 @@ let moveCamera; // Move when a button is pressed
 
 //-- 'Camera Holder' to help moving the camera
 const cameraHolder = new THREE.Object3D();
-cameraHolder.position.set( 0, 5, 0 );
+cameraHolder.position.set( 0, 50, 0 );
 cameraHolder.rotation.set( 0, degreesToRadians(0), 0 );
 cameraHolder.add(camera);
 
@@ -119,7 +122,8 @@ function render()
 //-- Create Scene --------------------------------------------------------------------------------
 function createScene()
 {
-    initOcean();
+    // initDefaultOcean();
+    initCustomOcean();
 	initSky();
 }
 
@@ -167,15 +171,15 @@ function initSky()
 }
 
 
-function initOcean()
+function initDefaultOcean()
 {
     const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
-    water = new Water(
+    water = new DefaultWater(
         waterGeometry,
         {
             textureWidth: 512,
             textureHeight: 512,
-            waterNormals: new THREE.TextureLoader().load( '../assets/textures/waternormals.jpg', function ( texture ) {
+            waterNormals: new THREE.TextureLoader().load( './assets/textures/waternormals.jpg', function ( texture ) {
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             } ),
             sunDirection: new THREE.Vector3(),
@@ -193,4 +197,47 @@ function initOcean()
     folderWater.add( waterUniforms.distortionScale, 'value', 0, 8, 0.1 ).name( 'distortionScale' );
     folderWater.add( waterUniforms.size, 'value', 0.1, 10, 0.1 ).name( 'size' );
     folderWater.open();
+}
+
+function initCustomOcean()
+{
+     // Water
+    let waterGeometry = new PlaneBufferGeometry(25000, 25000, 2500, 2500);
+
+    water = new CustomWater(
+         waterGeometry,
+         {
+             textureWidth: 512,
+             textureHeight: 512,
+             waterNormals: new THREE.TextureLoader().load('./assets/textures/waternormals.jpg',
+                 function(texture) {
+                     texture.wrapS = texture.wrapT = RepeatWrapping;
+                 }),
+             alpha: 1.0,
+             sunDirection: new THREE.Vector3(),
+             sunColor: 0xffffff,
+             waterColor: 0x00eeff,
+ 
+             direction: 0.0,
+             frequency: 0.08,
+             amplitude: 1.0,
+             steepness: 0.5,
+             speed: 1.0,
+             manyWaves: 3
+         }
+     );
+    water.rotation.x = -Math.PI / 2;
+ 
+    scene.add(water);
+
+    const waterUniforms = water.material.uniforms;
+
+    const folder = gui.addFolder('Water');
+    folder.add(waterUniforms.direction, 'value', 0, 2 * Math.PI, 0.01).name('wave angle');
+    folder.add(waterUniforms.frequency, 'value', 0.01, .08, 0.001).name('frequency');
+    folder.add(waterUniforms.amplitude, 'value', 0.0, 40.0, 0.5).name('amplitude');
+    folder.add(waterUniforms.steepness, 'value', 0, 1.0, 0.01).name('steepness');
+    folder.add(waterUniforms.speed, 'value',     0.0, 5.0, 0.01).name('speed');
+    folder.add(waterUniforms.wavesToAdd, 'value', 0, 16, 1).name('add waves');
+    folder.open();
 }

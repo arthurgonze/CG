@@ -19,7 +19,10 @@ import {
 import dwfs from "./shaders/default_water_fragment_shader.glsl.js"
 import dwvs from "./shaders/default_water_vertex_shader.glsl.js"
 
-/**
+import cwfs from "./shaders/custom_water_fragment_shader.glsl.js"
+import cwvs from "./shaders/custom_water_vertex_shader.glsl.js"
+
+/*
  * Work based on :
  * http://slayvin.net : Flat mirror for three.js
  * http://www.adelphi.edu/~stemkoski : An implementation of water shader based on the flat mirror
