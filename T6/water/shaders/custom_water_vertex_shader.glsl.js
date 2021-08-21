@@ -19,10 +19,12 @@ uniform sampler2D coefficientSampler;
 
 // Simulation step
 uniform float time;
-
 varying vec4 mirrorCoord;
 varying vec4 worldPosition;
+
 varying vec3 vvnormal;
+
+#include <common>
 #include <fog_pars_vertex>
 #include <shadowmap_pars_vertex>
 #include <logdepthbuf_pars_vertex>
@@ -32,8 +34,7 @@ const int NB_WAVES = 16;
 void addWave(
     float x, float y,
     float frequencyI, float amplitudeI, float steepnessI, float directionI, float phaseI,
-    inout vec3 o, bool doIt
-)
+    inout vec3 o, bool doIt)
 {
     if (!doIt) return;
     vec2 d = vec2(cos(directionI), sin(directionI));
@@ -49,8 +50,7 @@ void addWave(
 void addWaveNormal(
     float x, float y,
     float frequencyI, float amplitudeI, float steepnessI, float directionI, float phaseI,
-    vec3 p, inout vec3 n, bool doIt
-)
+    vec3 p, inout vec3 n, bool doIt)
 {
     if (!doIt) return;
     vec2 d = vec2(cos(directionI), sin(directionI));
@@ -128,6 +128,8 @@ void main()
 
     gl_Position = projectionMatrix * mvPosition;
 
+    //#include <beginnormal_vertex>
+    //#include <defaultnormal_vertex>
     #include <logdepthbuf_vertex>
     #include <fog_vertex>
     #include <shadowmap_vertex>

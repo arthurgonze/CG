@@ -21,7 +21,7 @@ import { Waves as CustomWater } from './water/custom_water.js';
 window.addEventListener( 'resize', onWindowResize );
 
 //-- Renderer settings ---------------------------------------------------------------------------
-let renderer = new THREE.WebGLRenderer();
+let renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setClearColor(new THREE.Color("rgb(70, 150, 240)"));
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -56,12 +56,12 @@ camera.add( controller1 );
 let container = document.getElementById( 'container' );
 container.appendChild( renderer.domElement );
 
-let sky, sun, water;
+let sky, sun, water, cube;
 
 const stats = Stats();
 document.body.appendChild(stats.dom);
 
-const gui = new GUI();
+let gui = new GUI();
 
 //-- Creating Scene and calling the main loop ----------------------------------------------------
 createScene();
@@ -109,7 +109,8 @@ function animate()
 function render() 
 {
     stats.update();
-    const time = performance.now() * 0.001;
+    animateCube();
+
 	water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
     move();
 	renderer.render( scene, camera );
@@ -125,6 +126,36 @@ function createScene()
     // initDefaultOcean();
     initCustomOcean();
 	initSky();
+    // initOceanGround();
+    initCube();
+}
+
+function initCube()
+{
+    const cubeGeometry = new THREE.BoxGeometry( 50, 50, 50 );
+    const cubeMaterial = new THREE.MeshStandardMaterial( { roughness: 0 } );
+    cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+    cube.position.set(0, 0, -200);
+    scene.add( cube );
+}
+
+function animateCube()
+{
+    const time = performance.now() * 0.001;
+    cube.position.y = Math.sin( time ) * 20 + 5;
+    cube.rotation.x = time * 0.5;
+    cube.rotation.z = time * 0.51;
+}
+
+function initOceanGround()
+{
+    // ocean ground
+    let groundGeometry = new PlaneBufferGeometry(1000, 1000, 250, 250);
+    const groundMaterial = new THREE.MeshStandardMaterial( { roughness: 0 } );
+    let ground = new THREE.Mesh( groundGeometry, groundMaterial );
+    ground.position.set(0, 1, 0);
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
 }
 
 
@@ -156,7 +187,7 @@ function initSky()
         sun.setFromSphericalCoords( 1, phi, theta );
 
         sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
-        water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
+        water.material.uniforms.sunDirection.value.copy( sun ).normalize();
 
         scene.environment = pmremGenerator.fromScene( sky ).texture;
     }
@@ -196,48 +227,56 @@ function initDefaultOcean()
     const folderWater = gui.addFolder( 'Water' );
     folderWater.add( waterUniforms.distortionScale, 'value', 0, 8, 0.1 ).name( 'distortionScale' );
     folderWater.add( waterUniforms.size, 'value', 0.1, 10, 0.1 ).name( 'size' );
+    
     folderWater.open();
 }
 
 function initCustomOcean()
 {
      // Water
-    let waterGeometry = new PlaneBufferGeometry(10000, 10000, 500, 500);
+    let waterGeometry = new PlaneBufferGeometry(10000, 10000, 2500, 2500);
 
     water = new CustomWater(
-         waterGeometry,
-         {
-             textureWidth: 512,
-             textureHeight: 512,
-             waterNormals: new THREE.TextureLoader().load('./assets/textures/waternormals.jpg',
-                 function(texture) {
-                     texture.wrapS = texture.wrapT = RepeatWrapping;
-                 }),
-             alpha: 1.0,
-             sunDirection: new THREE.Vector3(),
-             sunColor: 0xffffff,
-             waterColor: 0x00eeff,
- 
-             direction: 0.0,
-             frequency: 0.08,
-             amplitude: 1.0,
-             steepness: 0.5,
-             speed: 1.0,
-             manyWaves: 3
-         }
-     );
+        waterGeometry,
+        {
+        textureWidth: 512,
+        textureHeight: 512,
+        waterNormals: new THREE.TextureLoader().load('./assets/textures/waternormals.jpg', function(texture) { 
+            texture.wrapS = texture.wrapT = RepeatWrapping; 
+        }),
+
+        alpha:         .5,
+        sunDirection:  new THREE.Vector3(),
+        sunColor:      0xffffff,
+        waterColor:    0x00eeff,
+        direction:     2.0,
+        frequency:     0.025,
+        amplitude:     20.0,
+        steepness:     0.0,
+        speed:         1.0,
+        manyWaves:     0
+        }
+    );
     water.rotation.x = -Math.PI / 2;
- 
     scene.add(water);
 
     const waterUniforms = water.material.uniforms;
 
+    // function updateOcean() {
+    //     water.material.uniforms.direction.value.copy( water ).normalize();
+    //     water.material.uniforms.frequency.value.copy( water );
+    //     water.material.uniforms.amplitude.value.copy( water );
+    //     water.material.uniforms.steepness.value.copy( water );
+    //     water.material.uniforms.speed.value.copy( water );
+    //     water.material.uniforms.wavesToAdd.value.copy( water );
+    // }
+
     const folder = gui.addFolder('Water');
-    folder.add(waterUniforms.direction, 'value', 0, 2 * Math.PI, 0.01).name('wave angle');
-    folder.add(waterUniforms.frequency, 'value', 0.01, .08, 0.001).name('frequency');
-    folder.add(waterUniforms.amplitude, 'value', 0.0, 40.0, 0.5).name('amplitude');
-    folder.add(waterUniforms.steepness, 'value', 0, 1.0, 0.01).name('steepness');
-    folder.add(waterUniforms.speed, 'value',     0.0, 5.0, 0.01).name('speed');
-    folder.add(waterUniforms.wavesToAdd, 'value', 0, 16, 1).name('add waves');
+    folder.add(waterUniforms.direction,     'value',    0,      2 * Math.PI,    0.01).name('wave angle');
+    folder.add(waterUniforms.frequency,     'value',    0.01,   0.1,           0.001).name('frequency');
+    folder.add(waterUniforms.amplitude,     'value',    0.0,    40.0,           0.5).name('amplitude');
+    folder.add(waterUniforms.steepness,     'value',    0,      1.0,            0.01).name('steepness');
+    folder.add(waterUniforms.speed,         'value',    0.0,    5.0,            0.01).name('speed');
+    folder.add(waterUniforms.wavesToAdd,    'value',    0,      16,             1).name('add waves');
     folder.open();
 }

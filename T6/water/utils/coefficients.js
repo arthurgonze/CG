@@ -27,7 +27,7 @@ function getCoefficientsTexture()
 
     let i = 0;
     let j = 0;
-    while (i < 3 * size)
+    while (i < 5 * size)
     {
         j++;
         let w = getWave(j, size);
