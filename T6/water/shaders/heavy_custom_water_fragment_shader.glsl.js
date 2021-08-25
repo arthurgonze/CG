@@ -86,13 +86,14 @@ void main() {
     float distortionFactor = max(distance/100.0, 10.0);
     vec2 distortion = surfaceNormal.xz / distortionFactor;
 
-    vec3 reflectionSample = vec3( texture2D( reflectionSampler, screen + distortion) );
-    
+    // vec3 reflectionSample = vec3( texture2D( reflectionSampler, screen + distortion) );
+    vec3 reflectionSample = vec3( texture2D( reflectionSampler, mirrorCoord.xy / mirrorCoord.w + distortion) );
+
     //**************************************** 
     //**** Fresnel-Schlicks Approximation ****
     //****************************************
     float theta = max( dot( eyeDirection, surfaceNormal ), 0.0 );
-    float rf0 = 0.02;
+    float rf0 = 0.2;
     float reflectance = rf0 + ( 1.0 - rf0 ) * pow( ( 1.0 - theta ), 5.0 );
 
 
@@ -105,8 +106,8 @@ void main() {
     //***************************
     //******** Refraction *******
     //***************************
-    vec3 refractionSample = vec3( texture2D( reflectionSampler, screen - distortion) );
-
+    // vec3 refractionSample = vec3( texture2D( reflectionSampler, screen - distortion) );
+    vec3 refractionSample = vec3( texture2D( reflectionSampler, mirrorCoord.xy / mirrorCoord.w - distortion) );
     //***************************
     //******** Absorbtion ********
     //***************************

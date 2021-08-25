@@ -132,7 +132,7 @@ function createScene()
 
 function initCube()
 {
-    const cubeGeometry = new THREE.BoxGeometry( 50, 50, 50 );
+    const cubeGeometry = new THREE.BoxGeometry( 100, 100, 100 );
     const cubeMaterial = new THREE.MeshStandardMaterial( { roughness: 0 } );
     cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
     cube.position.set(0, 0, -200);
@@ -142,7 +142,7 @@ function initCube()
 function animateCube()
 {
     const time = performance.now() * 0.001;
-    cube.position.y = Math.sin( time ) * 40 + 5;
+    cube.position.y = Math.sin( time ) * 80 + 5;
     cube.rotation.x = time * 0.5;
     cube.rotation.z = time * 0.51;
 }
