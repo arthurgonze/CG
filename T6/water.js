@@ -142,7 +142,7 @@ function initCube()
 function animateCube()
 {
     const time = performance.now() * 0.001;
-    cube.position.y = Math.sin( time ) * 20 + 5;
+    cube.position.y = Math.sin( time ) * 40 + 5;
     cube.rotation.x = time * 0.5;
     cube.rotation.z = time * 0.51;
 }
@@ -234,7 +234,7 @@ function initDefaultOcean()
 function initCustomOcean()
 {
      // Water
-    let waterGeometry = new PlaneBufferGeometry(10000, 10000, 2500, 2500);
+    let waterGeometry = new PlaneBufferGeometry(10000, 10000, 512, 512);
 
     water = new CustomWater(
         waterGeometry,

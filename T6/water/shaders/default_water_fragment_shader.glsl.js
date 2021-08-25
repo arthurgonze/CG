@@ -1,6 +1,6 @@
 const fragmentShader = 
 `
-    uniform sampler2D mirrorSampler;
+    uniform sampler2D reflectionSampler;
     
     uniform float alpha;
     uniform float time;
@@ -72,7 +72,7 @@ const fragmentShader =
         
         vec2 distortion = surfaceNormal.xz * ( 0.001 + 1.0 / distance ) * distortionScale;
         
-        vec3 reflectionSample = vec3( texture2D( mirrorSampler, mirrorCoord.xy / mirrorCoord.w + distortion ) );
+        vec3 reflectionSample = vec3( texture2D( reflectionSampler, mirrorCoord.xy / mirrorCoord.w + distortion ) );
         
         float theta = max( dot( eyeDirection, surfaceNormal ), 0.0 );
         float rf0 = 0.3;
