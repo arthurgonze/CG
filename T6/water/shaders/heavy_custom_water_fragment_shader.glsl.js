@@ -108,6 +108,7 @@ void main() {
     //***************************
     // vec3 refractionSample = vec3( texture2D( reflectionSampler, screen - distortion) );
     vec3 refractionSample = vec3( texture2D( reflectionSampler, mirrorCoord.xy / mirrorCoord.w - distortion) );
+    
     //***************************
     //******** Absorbtion ********
     //***************************

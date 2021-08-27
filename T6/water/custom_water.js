@@ -1,6 +1,7 @@
 import {
     Color,
     FrontSide,
+    DoubleSide,
     LinearFilter,
     MathUtils,
     Matrix4,
@@ -124,6 +125,7 @@ let Waves = function(geometry, options = {})
         lights: true,
         side: side,
         fog: fog,
+        transparent: true,
         // wireframe: true
     });
 

@@ -42,16 +42,30 @@ cameraHolder.add(camera);
 
 scene.add( cameraHolder );
 
+// create an AudioListener and add it to the camera
+const listener = new THREE.AudioListener();
+cameraHolder.add( listener );
+
+// create a global audio source
+const oceanSound = new THREE.Audio( listener );
+
+// load a sound and set it as the Audio object's buffer
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load( './water/sounds/sea.wav', function( buffer ) {
+	oceanSound.setBuffer( buffer );
+	oceanSound.setLoop( true );
+	oceanSound.setVolume( 0.5 );
+	oceanSound.play();
+});
+
 //-- Create VR button and settings ---------------------------------------------------------------
 document.body.appendChild( VRButton.createButton( renderer ) );
-
-
 
 // controllers
 var controller1 = renderer.xr.getController( 0 );
 	controller1.addEventListener( 'selectstart', onSelectStart );
 	controller1.addEventListener( 'selectend', onSelectEnd );
-camera.add( controller1 );
+camera.add( controller1 ); 
 
 let container = document.getElementById( 'container' );
 container.appendChild( renderer.domElement );
@@ -132,19 +146,19 @@ function createScene()
 
 function initCube()
 {
-    const cubeGeometry = new THREE.BoxGeometry( 50, 50, 50 );
+    const cubeGeometry = new THREE.BoxGeometry( 500, 500, 500 );
     const cubeMaterial = new THREE.MeshStandardMaterial( { roughness: 0 } );
     cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-    cube.position.set(0, 0, -200);
+    cube.position.set(0, 125, 1000);
     scene.add( cube );
 }
 
 function animateCube()
 {
     const time = performance.now() * 0.001;
-    cube.position.y = Math.sin( time ) * 40 + 5;
-    cube.rotation.x = time * 0.5;
-    cube.rotation.z = time * 0.51;
+    // cube.position.y = Math.sin( time ) * 40 + 5;
+    // cube.rotation.x = time * 0.5;
+    // cube.rotation.z = time * 0.51;
 }
 
 function initOceanGround()
@@ -245,16 +259,20 @@ function initCustomOcean()
             texture.wrapS = texture.wrapT = RepeatWrapping; 
         }),
 
-        alpha:         .5,
+        alpha:         1.0,
         sunDirection:  new THREE.Vector3(),
         sunColor:      0xffffff,
+        // sunColor:      0xffff00,
+        // sunColor:      0x0000ff,
+        // sunColor:      0xff0000,
         waterColor:    0x00eeff,
-        direction:     2.0,
-        frequency:     0.025,
-        amplitude:     20.0,
-        steepness:     0.0,
-        speed:         1.0,
-        manyWaves:     0
+        direction:     1.35,
+        frequency:     0.02,
+        amplitude:     10.0,
+        steepness:     0.2,
+        speed:         1.25,
+        manyWaves:     0,
+        side: THREE.DoubleSide
         }
     );
     water.rotation.x = -Math.PI / 2;
