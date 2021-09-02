@@ -6,12 +6,16 @@ import { VRButton } from '../build/jsm/webxr/VRButton.js';
 import {onWindowResize,
 		degreesToRadians,
 		createGroundPlane,
-        radiansToDegrees} from "../libs/util/util.js";
+        radiansToDegrees,
+        getMaxSize} from "../libs/util/util.js";
 import Stats from '../build/jsm/libs/stats.module.js';
 import { GUI } from '../build/jsm/libs/dat.gui.module.js';
 import { Sky } from '../build/jsm/objects/Sky.js';
+import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js'
+import {DRACOLoader} from '../build/jsm/loaders/DRACOLoader.js'
 import { Water as DefaultWater} from './water/default_water.js';
 import { Waves as CustomWater } from './water/custom_water.js';
+
 
 
 //-----------------------------------------------------------------------------------------------
@@ -51,12 +55,12 @@ const oceanSound = new THREE.Audio( listener );
 
 // load a sound and set it as the Audio object's buffer
 const audioLoader = new THREE.AudioLoader();
-audioLoader.load( './water/sounds/sea.wav', function( buffer ) {
-	oceanSound.setBuffer( buffer );
-	oceanSound.setLoop( true );
-	oceanSound.setVolume( 0.5 );
-	oceanSound.play();
-});
+// audioLoader.load( './water/sounds/sea.wav', function( buffer ) {
+// 	oceanSound.setBuffer( buffer );
+// 	oceanSound.setLoop( true );
+// 	oceanSound.setVolume( 0.5 );
+// 	oceanSound.play();
+// });
 
 //-- Create VR button and settings ---------------------------------------------------------------
 document.body.appendChild( VRButton.createButton( renderer ) );
@@ -94,7 +98,7 @@ function move()
 		quaternion = camera.quaternion;
 
 		// Get direction to translate from quaternion
-		var moveTo = new THREE.Vector3(0, 0, -0.1);
+		var moveTo = new THREE.Vector3(0, 0, -1);
 		moveTo.applyQuaternion(quaternion);
 
 		// Move the camera Holder to the computed direction
@@ -123,7 +127,7 @@ function animate()
 function render() 
 {
     stats.update();
-    animateCube();
+    // animateCube();
 
 	water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
     move();
@@ -141,7 +145,18 @@ function createScene()
     initCustomOcean();
 	initSky();
     // initOceanGround();
-    initCube();
+    // initCube();
+    initShip();
+}
+
+function initShip()
+{
+    var modelPath = "./assets/gltf/"
+    var modelName = "low_poly_titanic/scene.gltf";
+    var initialScale = 1500;
+    var initialPosition = new THREE.Vector3(0, 0, -750);
+    var initialRotation = new THREE.Vector3(0, 0, 0);
+    importGLTF(modelPath, modelName, initialPosition, initialRotation, initialScale);
 }
 
 function initCube()
@@ -188,7 +203,7 @@ function initSky()
     skyUniforms[ 'mieDirectionalG' ].value = 0.7;
 
     const parameters = {
-        elevation: 2,
+        elevation: 25,
         azimuth: 180
     };
 
@@ -262,9 +277,6 @@ function initCustomOcean()
         alpha:         1.0,
         sunDirection:  new THREE.Vector3(),
         sunColor:      0xffffff,
-        // sunColor:      0xffff00,
-        // sunColor:      0x0000ff,
-        // sunColor:      0xff0000,
         waterColor:    0x00eeff,
         direction:     1.35,
         frequency:     0.02,
@@ -280,15 +292,6 @@ function initCustomOcean()
 
     const waterUniforms = water.material.uniforms;
 
-    // function updateOcean() {
-    //     water.material.uniforms.direction.value.copy( water ).normalize();
-    //     water.material.uniforms.frequency.value.copy( water );
-    //     water.material.uniforms.amplitude.value.copy( water );
-    //     water.material.uniforms.steepness.value.copy( water );
-    //     water.material.uniforms.speed.value.copy( water );
-    //     water.material.uniforms.wavesToAdd.value.copy( water );
-    // }
-
     const folder = gui.addFolder('Water');
     folder.add(waterUniforms.direction,     'value',    0,      2 * Math.PI,    0.01).name('wave angle');
     folder.add(waterUniforms.frequency,     'value',    0.01,   0.1,           0.001).name('frequency');
@@ -297,4 +300,50 @@ function initCustomOcean()
     folder.add(waterUniforms.speed,         'value',    0.0,    5.0,            0.01).name('speed');
     folder.add(waterUniforms.wavesToAdd,    'value',    0,      16,             1).name('add waves');
     folder.open();
+}
+
+function importGLTF(modelPath, modelName, initialPosition, initialRotation, initialScale)
+{
+    var loader = new GLTFLoader( );
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
+
+    loader.load( modelPath + modelName, function ( gltf ) {
+        var obj = gltf.scene;
+
+        obj.traverse( function ( child ) {
+            if ( child ) { 
+                child.castShadow = true; 
+                child.receiveShadow = true;
+            }
+        });
+
+        obj = normalizeAndRescale(obj, initialScale);
+        obj.translateX(initialPosition.x);
+        obj.translateY(initialPosition.y);
+        obj.translateZ(initialPosition.z);
+        obj.rotateX(degreesToRadians(initialRotation.x));
+        obj.rotateY(degreesToRadians(initialRotation.y));
+        obj.rotateZ(degreesToRadians(initialRotation.z));
+        scene.add(obj);
+        return obj;
+    }, function ( xhr ) {
+
+		console.log( "GLTF "+( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+	}, function ( error ) {
+
+		console.log( 'An error happened' );
+
+	});
+}
+
+function normalizeAndRescale(obj, newScale)
+{
+  var scale = getMaxSize(obj); // Available in 'utils.js'
+  obj.scale.set(newScale * (1.0/scale),
+                newScale * (1.0/scale),
+                newScale * (1.0/scale));
+  return obj;
 }
