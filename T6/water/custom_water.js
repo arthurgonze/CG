@@ -110,10 +110,10 @@ let Waves = function(geometry, options = {})
                 coefficientSampler: { value: coefficientTexture },
             }
         ]),
-
         vertexShader: WavesVertex,
-        // vertexShader: DefaultWavesVertex,
         fragmentShader: HeavyWavesFragment
+
+        // vertexShader: DefaultWavesVertex,
         // fragmentShader: BasicWavesFragment
         // fragmentShader: DefaultWavesFragment
     };
