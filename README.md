@@ -49,7 +49,7 @@ This was a test with animation in AR, plotting a part of the solar system. The s
 
 [Ambiente 04](https://arthurgonze.github.io/CG/T3/t3_ex04.html).
 This was a test with a multimarker that you can select different objects to plot and if you hide a letter the object will be plotted on another one.
-![img](Images/t3_04.png)
+![img](Images/t3_04.jpeg)
 
 ## Trabalho 4
 [Ambiente 01](https://arthurgonze.github.io/CG/T4/t4_ex01.html).
